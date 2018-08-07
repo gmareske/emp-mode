@@ -23,5 +23,39 @@
 		   ,method)
 		 args)))
 
-(defun mpris-get-prop (prop-name)
-  (mpris-call mpris-get-prop-i "Get" mpris-player-i prop-name))
+(defun mpris-get-prop (prop-name :rest args)
+  (apply 'mpris-call
+	 (append `(,mpris-get-prop-i
+		   "Get"
+		   ,mpris-player-i
+		   ,prop-name)
+		 args)))
+
+(defun mpris-call-player (method &rest args)
+  (apply 'mpris-call
+	 (append `(,mpris-player-i
+		   ,method)
+		 args)))
+
+;;; Interactive Functions
+(defun emp-play ()
+  (interactive)
+  (mpris-call-player "PlayPause"))
+
+(defun emp-pause ()
+  (interactive)
+  (mpris-call-player "Pause"))
+
+(defun emp-next ()
+  (interactive)
+  (mpris-call-player "Next"))
+
+(defun emp-prev ()
+  (interactive)
+  (mpris-call-player "Previous"))
+
+(defun emp-stop ()
+  (interactive)
+  (mpris-call-player "Stop"))
+   
+       
