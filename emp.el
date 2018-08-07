@@ -1,14 +1,19 @@
 (require 'dbus)
 
+(defgroup emp
+  nil
+  "Custom variables for emp, an emacs MPRIS interface")
 (defcustom mpris-service
   "org.mpris.MediaPlayer2.rhythmbox"
   "Default service for MPRIS"
-  :type 'string)
+  :type 'string
+  :group 'emp)
 
 (defcustom mpris-max-timeout
   2000
   "Default timeout for MPRIS service"
-  :type 'integer)
+  :type 'integer
+  :group 'emp)
 
 (defvar mpris-player-i "org.mpris.MediaPlayer2.Player")
 (defvar mpris-get-prop-i "org.freedesktop.DBus.Properties")
@@ -23,7 +28,7 @@
 		   ,method)
 		 args)))
 
-(defun mpris-get-prop (prop-name :rest args)
+(defun mpris-get-prop (prop-name &rest args)
   (apply 'mpris-call
 	 (append `(,mpris-get-prop-i
 		   "Get"
