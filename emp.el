@@ -19,6 +19,8 @@
 	    (define-key map (kbd "C-c s") 'emp-stop)
 	    (define-key map (kbd "C-c u") 'emp-pause)
 	    (define-key map (kbd "C-c i") 'emp-play)
+	    (define-key map (kbd "C-c .") 'emp-vol-up)
+	    (define-key map (kbd "C-c ,") 'emp-vol-down)
 	    map))
 
 (defgroup emp
@@ -142,6 +144,23 @@
   (interactive)
   (message "Stopping %s..." mpris-player-name)
   (mpris-call-player "Stop"))
+
+(defun emp-vol-up ()
+  "Increase volume of MPRIS Player"
+  (interactive)
+  (let* ((vol (car (mpris-get-prop "Volume")))
+	 (newvol (+ vol .1)))
+    (mpris-set-prop "Volume" (min newvol 1.0))
+    (message "Volume up to %0.2f%%..." (* 100 newvol))))
+
+(defun emp-vol-down ()
+  "Decrease voluem of MPRIS Player"
+  (interactive)
+  (let* ((vol (car (mpris-get-prop "Volume")))
+	 (newvol (- vol .1)))
+    (mpris-set-prop "Volume" (max newvol 0.0))
+    (message "Volume down to %0.2f%%..." (* 100 newvol))))
+    
 
 (provide 'emp)
 
