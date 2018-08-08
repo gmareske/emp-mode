@@ -96,12 +96,14 @@
    
        
 (car (mpris-get-prop "Metadata"))
-(defun metadata-alist ()
+(defun metadata-hash ()
   (letrec ((helper (lambda (cur build)
 		     (if (null cur)
 			 build
-		       (cons (make-symbol (caar cur))
-			     (cons (caadar cur)
-				   (funcall helper (cdr cur) build)))))))
+		       (puthash (make-symbol (caar cur))
+				(caadar cur)
+				build)
+		       (funcall helper (cdr cur) build)))))
 
-    (funcall helper (car (mpris-get-prop "Metadata")) '())))
+    (funcall helper (car (mpris-get-prop "Metadata")) (make-hash-table :test 'eq))))
+
