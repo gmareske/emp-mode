@@ -1,7 +1,17 @@
-;;; emp.el --- Minor mode for controlling MPRIS2-compatible players through Emacs
+;;; emp.el --- Control music players from Emacs
+
+
+;; Copyright (C) 2018 Griffin Mareske <gmareske@gmail.com>
+;; Author: Griffin Mareske
+;; License: MIT License (included)
+;; URL: http://github.com/gmareske/emp-mode
+;; Created: 2018
+;; Version: 0.1
+;; Keywords: music mpris 
 
 ;;; Commentary:
-;; 
+;;
+;; This module allows control of MPRIS2-compatible music players through Emacs
 
 (require 'dbus)
 
@@ -19,8 +29,6 @@
 	    (define-key map (kbd "C-c s") 'emp-stop)
 	    (define-key map (kbd "C-c u") 'emp-pause)
 	    (define-key map (kbd "C-c i") 'emp-play)
-	    (define-key map (kbd "C-c .") 'emp-vol-up)
-	    (define-key map (kbd "C-c ,") 'emp-vol-down)
 	    map))
 
 (defgroup emp
@@ -145,7 +153,7 @@
   (message "Stopping %s..." mpris-player-name)
   (mpris-call-player "Stop"))
 
-(defun emp-vol-up ()
+(defun emp-volume-up ()
   "Increase volume of MPRIS Player"
   (interactive)
   (let* ((vol (car (mpris-get-prop "Volume")))
@@ -153,7 +161,7 @@
     (mpris-set-prop "Volume" (min newvol 1.0))
     (message "Volume up to %0.2f%%..." (* 100 newvol))))
 
-(defun emp-vol-down ()
+(defun emp-volume-down ()
   "Decrease voluem of MPRIS Player"
   (interactive)
   (let* ((vol (car (mpris-get-prop "Volume")))
