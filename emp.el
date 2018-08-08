@@ -66,26 +66,32 @@
 ;;; Interactive Functions
 (defun emp-toggle ()
   (interactive)
+  (message "Toggling %s..." mpris-player-name)
   (mpris-call-player "PlayPause"))
 
 (defun emp-play ()
   (interactive)
+  (message "Playing %s..." mpris-player-name)
   (mpris-call-player "Play"))
 
 (defun emp-pause ()
   (interactive)
+  (message "Pausing %s..." mpris-player-name)
   (mpris-call-player "Pause"))
 
 (defun emp-next ()
   (interactive)
+  (message "Starting next song on %s..." mpris-player-name)
   (mpris-call-player "Next"))
 
 (defun emp-prev ()
   (interactive)
+  (message "Starting previous song on %s..." mpris-player-name)
   (mpris-call-player "Previous"))
 
 (defun emp-stop ()
   (interactive)
+  (message "Stopping %s..." mpris-player-name)
   (mpris-call-player "Stop"))
    
        
@@ -99,5 +105,3 @@
 				   (funcall helper (cdr cur) build)))))))
 
     (funcall helper (car (mpris-get-prop "Metadata")) '())))
-
-(metadata-alist)
