@@ -28,6 +28,7 @@
 
 (defvar mpris-player-i "org.mpris.MediaPlayer2.Player")
 (defvar mpris-get-prop-i "org.freedesktop.DBus.Properties")
+(defvar mpris-player-name (clean-mpris-player-name mpris-service))
 
 (defun find-mpris-player ()
   (let ((players
