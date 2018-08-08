@@ -68,6 +68,7 @@
 		 args)))
 
 (defun mpris-set-prop (prop-name val &rest args)
+  "Set prop-name to val, return val is success or nil/error otherwise"
   (apply 'dbus-set-property
 	(append `(:session
 		  ,mpris-service
@@ -141,8 +142,6 @@
   (interactive)
   (message "Stopping %s..." mpris-player-name)
   (mpris-call-player "Stop"))
-   
-
 
 (provide 'emp)
 
