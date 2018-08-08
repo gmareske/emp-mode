@@ -39,13 +39,12 @@
 
 (defvar mpris-player-i "org.mpris.MediaPlayer2.Player"
   "Name of the MediaPlayer2.Player instance.")
-(defvar mpris-get-prop-i "org.freedesktop.DBus.Properties"
+(defvar mpris-prop-i "org.freedesktop.DBus.Properties"
   "Name of the Freedesktop Properties Interface.")
-(defvar mpris-player-name (clean-mpris-player-name mpris-service)
-  "Shorthand for the actual name of the program being controlled.")
 
 (defun find-mpris-player ()
   "Return a list of running MPRIS-compatible players."
+  ;; Function currently not used
   (let ((players
 	 (seq-filter (lambda (s) (cl-search "org.mpris.MediaPlayer2" s))
 		     (dbus-call-method :session "org.freedesktop.DBus" "/org/freedesktop/DBus" "org.freedesktop.DBus" "ListNames"))))
@@ -53,6 +52,9 @@
 
 (defun clean-mpris-player-name (name)
   (cadr (split-string name "org.mpris.MediaPlayer2.")))
+
+(defvar mpris-player-name (clean-mpris-player-name mpris-service)
+  "Shorthand for the actual name of the program being controlled.")
 
 (defun mpris-call (interface method &rest args)
   "Call #METHOD with #INTERFACE on the MPRIS object specified by the custom variable ‘mpris-service’ and return the result."
@@ -65,10 +67,20 @@
 		   ,method)
 		 args)))
 
+(defun mpris-set-prop (prop-name val &rest args)
+  (apply 'dbus-set-property
+	(append `(:session
+		  ,mpris-service
+		  "/org/mpris/MediaPlayer2"
+		  ,mpris-player-i
+		  ,prop-name
+		  ,val)
+		args)))
+
 (defun mpris-get-prop (prop-name &rest args)
   "Identical to mpris-call, but uses the freedesktop get-prop interface."
   (apply 'mpris-call
-	 (append `(,mpris-get-prop-i
+	 (append `(,mpris-prop-i
 		   "Get"
 		   ,mpris-player-i
 		   ,prop-name)
