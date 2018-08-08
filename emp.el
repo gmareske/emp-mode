@@ -12,9 +12,13 @@
   :group 'emp
   :lighter " EMP"
   :keymap (let ((map (make-sparse-keymap)))
+	    ; TODO: find some keybindings that make sense
 	    (define-key map (kbd "C-c n") 'emp-next)
 	    (define-key map (kbd "C-c p") 'emp-prev)
 	    (define-key map (kbd "C-c m") 'emp-toggle)
+	    (define-key map (kbd "C-c s") 'emp-stop)
+	    (define-key map (kbd "C-c u") 'emp-pause)
+	    (define-key map (kbd "C-c i") 'emp-play)
 	    map))
 
 (defgroup emp
