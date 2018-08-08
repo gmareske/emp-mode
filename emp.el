@@ -29,7 +29,7 @@
 
 (defcustom mpris-max-timeout
   2000
-  ."Default timeout for MPRIS service"
+  "Default timeout for MPRIS service."
   :type 'integer
   :group 'emp)
 
