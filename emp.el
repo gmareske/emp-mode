@@ -109,13 +109,14 @@
   (letrec ((helper (lambda (cur build)
 		     (if (null cur)
 			 build
-		       (puthash (make-symbol (caar cur))
+		       (puthash (caar cur)
 				(caadar cur)
 				build)
 		       (funcall helper (cdr cur) build)))))
 
-    (funcall helper (car (mpris-get-prop "Metadata")) (make-hash-table :test 'eq))))
+    (funcall helper (car (mpris-get-prop "Metadata")) (make-hash-table :test 'equal))))
 
+;; Seeking
 (defun mpris-seek (offset-time-ms)
   (mpris-call mpris-player-i "Seek" :int64 time-ms))
 
@@ -125,43 +126,62 @@
 (defun mpris-seek-backward (offset)
   (mpris-seek (- offset)))
 
-  
+;; Info
+;; TODO: user-customizable song messages
+(defun mpris-song-info-message ()
+  (let* ((data (metadata-hash))
+	 (song (gethash "xesam:title" data))
+	 (artist (gethash "xesam:artist" data))
+	 (length (gethash "mpris:length" data))
+	 (pos (car (mpris-get-prop "Position"))))
+    (format "<%s - %s %0.2f%%>" song artist (/ pos (float length)))))
+
 ;;; Interactive Functions
 (defun emp-toggle ()
   "Toggle play on MPRIS Player."
   (interactive)
-  (message "Toggling %s..." mpris-player-name)
-  (mpris-call-player "PlayPause"))
+  (mpris-call-player "PlayPause")
+  (message "Toggling %s... %s" mpris-player-name
+	   (mpris-song-info-message)))
+
 
 (defun emp-play ()
   "Play on MPRIS Player."
   (interactive)
-  (message "Playing %s..." mpris-player-name)
-  (mpris-call-player "Play"))
+  (mpris-call-player "Play")
+  (message "Playing %s... %s" mpris-player-name
+	   (mpris-song-info-message)))
+
 
 (defun emp-pause ()
   "Pause on MPRIS Player."
   (interactive)
-  (message "Pausing %s..." mpris-player-name)
-  (mpris-call-player "Pause"))
+  (mpris-call-player "Pause")
+  (message "Pausing %s... %s" mpris-player-name
+	   (mpris-song-info-message)))
+
 
 (defun emp-next ()
   "Next song on MPRIS Player."
   (interactive)
-  (message "Starting next song on %s..." mpris-player-name)
-  (mpris-call-player "Next"))
+  (mpris-call-player "Next")
+  (message "Starting next song on %s... %s" mpris-player-name
+	   (mpris-song-info-message)))
+
 
 (defun emp-prev ()
   "Previous song on MPRIS Player."
   (interactive)
-  (message "Starting previous song on %s..." mpris-player-name)
-  (mpris-call-player "Previous"))
+  (mpris-call-player "Previous")
+  (message "Starting previous song on %s... %s" mpris-player-name
+	   (mpris-song-info-message)))
 
 (defun emp-stop ()
   "Stop MPRIS Player."
   (interactive)
-  (message "Stopping %s..." mpris-player-name)
-  (mpris-call-player "Stop"))
+  (mpris-call-player "Stop")
+  (message "Stopping %s..." mpris-player-name))
+
 
 (defun emp-volume-up ()
   "Increase volume of MPRIS Player"
@@ -183,3 +203,6 @@
 (provide 'emp)
 
 ;;; emp.el ends here
+
+
+
