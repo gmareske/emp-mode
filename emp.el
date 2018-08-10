@@ -116,6 +116,16 @@
 
     (funcall helper (car (mpris-get-prop "Metadata")) (make-hash-table :test 'eq))))
 
+(defun mpris-seek (offset-time-ms)
+  (mpris-call mpris-player-i "Seek" :int64 time-ms))
+
+(defun mpris-seek-forward (offset)
+  (mpris-seek offset))
+
+(defun mpris-seek-backward (offset)
+  (mpris-seek (- offset)))
+
+  
 ;;; Interactive Functions
 (defun emp-toggle ()
   "Toggle play on MPRIS Player."
