@@ -23,7 +23,6 @@
   :group 'emp
   :lighter " EMP"
   :keymap (let ((map (make-sparse-keymap)))
-	    ; TODO: find some keybindings that make sense
 	    (define-key map (kbd "M-p n") 'emp-next)
 	    (define-key map (kbd "M-p p") 'emp-prev)
 	    (define-key map (kbd "M-p m") 'emp-toggle)
@@ -134,7 +133,6 @@
   (mpris-seek (- offset)))
 
 ;; Info
-;; TODO: user-customizable song messages
 (defun mpris-song-info-message ()
   "Return a string of info about current song playing in current MPRIS player."
   (let* ((data (metadata-hash))
