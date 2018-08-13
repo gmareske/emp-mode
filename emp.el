@@ -204,11 +204,22 @@
 	 (newvol (- vol .1)))
     (mpris-set-prop "Volume" (max newvol 0.0))
     (message "Volume down to %0.2f%%..." (* 100 newvol))))
-    
+
+(defun emp-toggle-shuffle ()
+  "Toggle whether the current playlist of MPRIS player shuffles"
+  (interactive)
+  (let ((shuffle? (car (mpris-get-prop "Shuffle"))))
+    (mpris-set-prop "Shuffle" (not shuffle?))
+    (if shuffle?
+	(message "Shuffle turned off")
+      (message "Shuffle turned on"))))
+
+(defun emp-status ()
+  "Print the status message"
+  (interactive)
+  (message (mpris-song-info-message)))
 
 (provide 'emp)
 
 ;;; emp.el ends here
-
-
 
