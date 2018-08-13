@@ -7,7 +7,7 @@
 ;; URL: http://github.com/gmareske/emp-mode
 ;; Created: 2018
 ;; Version: 0.1
-;; Keywords: music mpris 
+;; Keywords: music mpris
 
 ;;; Commentary:
 ;;
@@ -23,12 +23,12 @@
   :lighter " EMP"
   :keymap (let ((map (make-sparse-keymap)))
 	    ; TODO: find some keybindings that make sense
-	    (define-key map (kbd "C-c n") 'emp-next)
-	    (define-key map (kbd "C-c p") 'emp-prev)
-	    (define-key map (kbd "C-c m") 'emp-toggle)
-	    (define-key map (kbd "C-c s") 'emp-stop)
-	    (define-key map (kbd "C-c u") 'emp-pause)
-	    (define-key map (kbd "C-c i") 'emp-play)
+	    (define-key map (kbd "M-p n") 'emp-next)
+	    (define-key map (kbd "M-p p") 'emp-prev)
+	    (define-key map (kbd "M-p m") 'emp-toggle)
+	    (define-key map (kbd "M-p s") 'emp-stop)
+	    (define-key map (kbd "M-p u") 'emp-pause)
+	    (define-key map (kbd "M-p i") 'emp-play)
 	    map))
 
 (defgroup emp
@@ -61,6 +61,7 @@
     players))
 
 (defun clean-mpris-player-name (name)
+  "Return the cleaned NAME from the mpris-player dbus name."
   (cadr (split-string name "org.mpris.MediaPlayer2.")))
 
 (defvar mpris-player-name (clean-mpris-player-name mpris-service)
@@ -78,7 +79,7 @@
 		 args)))
 
 (defun mpris-set-prop (prop-name val &rest args)
-  "Set prop-name to val, return val is success or nil/error otherwise"
+  "Set PROP-NAME to VAL, returns a value on success or nil/error otherwise."
   (apply 'dbus-set-property
 	(append `(:session
 		  ,mpris-service
@@ -89,7 +90,7 @@
 		args)))
 
 (defun mpris-get-prop (prop-name &rest args)
-  "Identical to mpris-call, but uses the freedesktop get-prop interface."
+  "Get PROP-NAME from the current mpris player."
   (apply 'mpris-call
 	 (append `(,mpris-prop-i
 		   "Get"
@@ -98,7 +99,7 @@
 		 args)))
 
 (defun mpris-call-player (method &rest args)
-  "Identical to mpris-call, but uses the player interface."
+  "Calls METHOD on the current mpris player."
   (apply 'mpris-call
 	 (append `(,mpris-player-i
 		   ,method)
@@ -118,17 +119,21 @@
 
 ;; Seeking
 (defun mpris-seek (offset-time-ms)
+  "Seek OFFSET-TIME-MS in the current track playing in the current MPRIS player."
   (mpris-call mpris-player-i "Seek" :int64 time-ms))
 
 (defun mpris-seek-forward (offset)
+  "Seek OFFSET ms forward in current track in current MPRIS player."
   (mpris-seek offset))
 
 (defun mpris-seek-backward (offset)
+  "Seek OFFSET ms backward in current track in current MPRIS player."
   (mpris-seek (- offset)))
 
 ;; Info
 ;; TODO: user-customizable song messages
 (defun mpris-song-info-message ()
+  "Return a string of info about current song playing in current MPRIS player."
   (let* ((data (metadata-hash))
 	 (song (gethash "xesam:title" data))
 	 (artist (gethash "xesam:artist" data))
@@ -184,7 +189,7 @@
 
 
 (defun emp-volume-up ()
-  "Increase volume of MPRIS Player"
+  "Increase volume of MPRIS Player."
   (interactive)
   (let* ((vol (car (mpris-get-prop "Volume")))
 	 (newvol (+ vol .1)))
@@ -192,7 +197,7 @@
     (message "Volume up to %0.2f%%..." (* 100 newvol))))
 
 (defun emp-volume-down ()
-  "Decrease voluem of MPRIS Player"
+  "Decrease volume of MPRIS Player."
   (interactive)
   (let* ((vol (car (mpris-get-prop "Volume")))
 	 (newvol (- vol .1)))
