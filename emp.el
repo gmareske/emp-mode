@@ -11,7 +11,8 @@
 
 ;;; Commentary:
 ;;
-;; This module allows control of MPRIS2-compatible music players through Emacs
+;; This module allows control of MPRIS2-compatible music players
+;; through DBUS
 
 (require 'dbus)
 
@@ -47,6 +48,8 @@
   :type 'integer
   :group 'emp)
 
+(defvar emp-mode-version "0.1.0"
+  "Version number of emp-mode.")
 (defvar mpris-player-i "org.mpris.MediaPlayer2.Player"
   "Name of the MediaPlayer2.Player instance.")
 (defvar mpris-prop-i "org.freedesktop.DBus.Properties"
